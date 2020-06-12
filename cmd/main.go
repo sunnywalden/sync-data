@@ -3,13 +3,13 @@ package main
 import (
 	"context"
 	"flag"
-	"github.com/sunnywalden/sync-data/apis"
 	"net/http"
 	_ "net/http/pprof"
 	"os"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
+	"github.com/sunnywalden/sync-data/apis"
 	"github.com/sunnywalden/sync-data/config"
 	"github.com/sunnywalden/sync-data/pkg/logging"
 )
@@ -66,6 +66,8 @@ func main () {
 	http.HandleFunc("/", apis.UserList)
 	http.HandleFunc("/user", apis.User)
 	http.Handle("/metrics", promhttp.Handler())
+
+	// service start
 	addr := host + ":" + port
 	log.Printf(addr)
 	err = http.ListenAndServe(addr, nil)
