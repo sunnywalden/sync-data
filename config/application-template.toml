@@ -1,0 +1,31 @@
+[app]
+  #app名称
+  name = "sync-users"
+  url = "http://localhost"
+  port = ":8080"
+  debug = false
+  version = "1.0.0"
+
+[oa]
+    oa_url = "http://localhost"
+    token_api = "/api/token/client"
+    user_api = "/api/user"
+    oa_client = ""
+    oa_secret = ""
+    user_active = 0
+
+[redis]
+    cache_host = "127.0.0.1"
+    cache_port = "6379"
+    cache_database = 1
+    cache_password = ""
+
+[mysql]
+    db_host = "127.0.0.1"
+    db_port = "3306"
+    db_database = ""
+    db_user = ""
+    db_password = ""
+
+[log]
+    log_level = "debug"
