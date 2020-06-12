@@ -9,6 +9,7 @@ import (
 	"os"
 
 	jsoniter "github.com/json-iterator/go"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"github.com/sunnywalden/sync-data/config"
 	"github.com/sunnywalden/sync-data/pkg/logging"
@@ -85,6 +86,7 @@ func main () {
 	}
 
 	http.HandleFunc("/", UserList)
+	http.Handle("/metrics", promhttp.Handler())
 	addr := host + ":" + port
 	log.Printf(addr)
 	err = http.ListenAndServe(addr, nil)
