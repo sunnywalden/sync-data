@@ -3,10 +3,10 @@ package main
 import (
 	"context"
 	"flag"
-	"net/http"
 	_ "net/http/pprof"
 	"os"
 
+	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"github.com/sunnywalden/sync-data/apis"
@@ -62,17 +62,42 @@ func main () {
 		flag.PrintDefaults()
 	}
 
-	// api route register
-	http.HandleFunc("/", apis.UserList)
-	http.HandleFunc("/user", apis.User)
-	http.Handle("/metrics", promhttp.Handler())
+	router := gin.Default()
 
-	// service start
+	user := router.Group("user")
+	{
+		user.GET("/users", apis.UserList)
+		user.GET("/user", apis.User)
+	}
+
+	plat := router.Group("plat")
+	{
+		plat.POST("/register", apis.Register)
+		plat.POST("/token", apis.GetToken)
+	}
+
+	router.GET("/metrics", promhttp.Handler())
+
 	addr := host + ":" + port
-	log.Printf(addr)
-	err = http.ListenAndServe(addr, nil)
+	err = router.Run(addr)
 	if err != nil {
 		log.Errorf("ERROR: ", err)
+		panic(err)
 	}
+
+	// api route register
+	//http.HandleFunc("/token", apis.GetToken)
+	//http.HandleFunc("/register", apis.Register)
+	//http.HandleFunc("/", apis.UserList)
+	//http.HandleFunc("/user", apis.User)
+	//http.Handle("/metrics", promhttp.Handler())
+	//
+	//// service start
+	//addr := host + ":" + port
+	//log.Printf(addr)
+	//err = http.ListenAndServe(addr,nil)
+	//if err != nil {
+	//	log.Errorf("ERROR: ", err)
+	//}
 
 }

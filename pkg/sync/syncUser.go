@@ -4,12 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/jinzhu/gorm"
 	"io/ioutil"
 	"net/http"
 	"time"
 
 	"github.com/go-redis/redis/v8"
+	"github.com/jinzhu/gorm"
 	jsoniter "github.com/json-iterator/go"
 
 	"github.com/sunnywalden/sync-data/config"
@@ -18,6 +18,7 @@ import (
 	"github.com/sunnywalden/sync-data/pkg/consts"
 	"github.com/sunnywalden/sync-data/pkg/databases"
 	"github.com/sunnywalden/sync-data/pkg/logging"
+	"github.com/sunnywalden/sync-data/pkg/models"
 	"github.com/sunnywalden/sync-data/pkg/types"
 )
 
@@ -26,7 +27,7 @@ var (
 )
 
 type UserInfo types.UserInfo
-type User types.User
+type User models.User
 
 // jsonDecode, decode json type data
 func jsonDecode(bodyC []byte) (types.UserInfo, error) {
@@ -60,7 +61,7 @@ func bodyResolve(resp *http.Response) (types.UserInfo, error) {
 }
 
 // GetUser, query all active users of oa
-func GetUser(ctx context.Context, configures *config.TomlConfig) (users []types.User,err error) {
+func GetUser(ctx context.Context, configures *config.TomlConfig) (users []models.User,err error) {
 
 	// 优先查询缓存
 	users, err = getUsersFromCache(ctx, &configures.Redis)
@@ -79,7 +80,7 @@ func GetUser(ctx context.Context, configures *config.TomlConfig) (users []types.
 	if err != nil {
 		panic(err)
 	} else {
-		log.Debugf("oa token: %s.\n", token)
+		log.Debugf("oa tokens: %s.\n", token)
 	}
 
 	users, err = getUserFromApi(token, &configures.OA)
@@ -98,7 +99,7 @@ func GetUser(ctx context.Context, configures *config.TomlConfig) (users []types.
 }
 
 // getUserFromApi, get oa users from oa user query api
-func getUserFromApi(token types.OaToken, configures *config.OA) (users []types.User,err error) {
+func getUserFromApi(token types.OaToken, configures *config.OA) (users []models.User,err error) {
 	oaConf := configures
 	oaUrl := oaConf.OaUrl
 	oaUserApi := oaConf.UserApi
@@ -137,7 +138,7 @@ func getUserFromApi(token types.OaToken, configures *config.OA) (users []types.U
 }
 
 // getUsersFromCache, get all users from cache
-func getUsersFromCache(ctx context.Context, configures *config.RedisConf) (users []types.User,err error) {
+func getUsersFromCache(ctx context.Context, configures *config.RedisConf) (users []models.User,err error) {
 
 	userKey := consts.UserInfoKey
 
@@ -170,7 +171,7 @@ func getUsersFromCache(ctx context.Context, configures *config.RedisConf) (users
 }
 
 // getUsersFromDB, get all users from mysql user table
-func getUsersFromDB(configures *config.MysqlConf) (users []types.User,err error) {
+func getUsersFromDB(configures *config.MysqlConf) (users []models.User,err error) {
 	db, err := databases.Conn(configures)
 	if err != nil {
 		return nil, err
@@ -178,7 +179,7 @@ func getUsersFromDB(configures *config.MysqlConf) (users []types.User,err error)
 
 	databases.Init(configures)
 
-	usersRows, err := db.Model(&types.User{}).Rows()
+	usersRows, err := db.Model(&models.User{}).Rows()
 	if err != nil {
 		log.Errorf("Query user table error!%s\n", err)
 		return nil, err
@@ -190,7 +191,7 @@ func getUsersFromDB(configures *config.MysqlConf) (users []types.User,err error)
 }
 
 // storeUsersToDB, insert all users to mysql user table
-func storeUsersToDB(configures *config.MysqlConf, users []types.User) (err error) {
+func storeUsersToDB(configures *config.MysqlConf, users []models.User) (err error) {
 	db, err := databases.Conn(configures)
 	if err != nil {
 		return err
@@ -213,7 +214,7 @@ func storeUsersToDB(configures *config.MysqlConf, users []types.User) (err error
 }
 
 // setUsersCache, store all users list to cache
-func setUsersCache(ctx context.Context, users []types.User, configures *config.RedisConf) (err error) {
+func setUsersCache(ctx context.Context, users []models.User, configures *config.RedisConf) (err error) {
 
 	userKey := consts.UserInfoKey
 	expireDay := consts.UserCacheExpireDay

@@ -1,10 +1,10 @@
 package databases
 
 import (
-	"github.com/sunnywalden/sync-data/config"
 	"github.com/jinzhu/gorm"
 
-	"github.com/sunnywalden/sync-data/pkg/types"
+	"github.com/sunnywalden/sync-data/config"
+	"github.com/sunnywalden/sync-data/pkg/models"
 )
 
 
@@ -33,7 +33,7 @@ func UpdateMysql(update map[string]byte,where map[string]byte, configures *confi
 
 	for k,v := range update {
 
-		database = db.Model(&types.User{}).Update(k,v)
+		database = db.Model(&models.User{}).Update(k,v)
 	}
 	return database, nil
 }
