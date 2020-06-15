@@ -2,8 +2,9 @@ package apis
 
 import (
 	"context"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 
 	"github.com/sunnywalden/sync-data/config"
 	"github.com/sunnywalden/sync-data/pkg/errors"
@@ -48,17 +49,12 @@ func searchUser(ctx context.Context, attr string, searchStr string) (user *model
 
 
 // User, query user matched
-//func User(w http.ResponseWriter, r *http.Request) {
 func User(c *gin.Context) {
 
 	var (
 		user *models.User
 		err error
 	)
-
-	//ctx, cancel := context.WithCancel(context.Background())
-
-	//defer cancel()
 
 	res := types.Response{
 		Code: 0,
@@ -68,8 +64,6 @@ func User(c *gin.Context) {
 	var status = http.StatusOK
 
 	//获取所有请求参数
-	//query := r.URL.Query()
-
 	nickName := c.DefaultQuery("nickname", "")
 	userId := c.Query("id")
 	name := c.Query("name")
@@ -83,26 +77,6 @@ func User(c *gin.Context) {
 			)
 	}
 
-	//nickName, ok := query["nickname"]
-	//if ok{
-	//	log.Printf("Debug user nickname %s", nickName[0])
-	//	user, err = searchUser(ctx, "nickName", nickName[0])
-	//}
-	//userId, ok := query["id"]
-	//if ok {
-	//	log.Infof("Debug user loginId %s", userId[0])
-	//	user, err = searchUser(ctx, "loginId", userId[0])
-	//}
-
-	//name, ok := query["name"]
-	//if ok {
-	//	log.Infof("Debug user lastname %s", name[0])
-	//	user, err = searchUser(ctx, "lastName", name[0])
-	//} else {
-	//	status = http.StatusBadRequest
-	//	res.Code = -1
-	//	res.Msg = errors.ErrQueryParamsNil.Error()
-	//}
 	if nickName != "" {
 		user, err = searchUser(c, "nickName", nickName)
 	} else if userId != "" {
@@ -110,7 +84,6 @@ func User(c *gin.Context) {
 	} else {
 		user, err = searchUser(c, "lastName", name)
 	}
-
 
 	// 判断查询用户是否异常
 	if err != nil {
@@ -121,7 +94,6 @@ func User(c *gin.Context) {
 		res.Data = user
 	}
 
-	//helper.ResponseWithJson(w, status, res)
 	c.JSON(
 		status,
 		res,

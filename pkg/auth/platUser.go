@@ -8,6 +8,7 @@ import (
 	"github.com/sunnywalden/sync-data/pkg/models"
 )
 
+// GenerateToken, generate a token for platform user
 func GenerateToken(user *models.PlatUser, authKey string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"username": user.UserName,

@@ -7,7 +7,8 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/sirupsen/logrus"
+	ginprometheus "github.com/zsais/go-gin-prometheus"
 
 	"github.com/sunnywalden/sync-data/apis"
 	"github.com/sunnywalden/sync-data/config"
@@ -25,7 +26,7 @@ var (
 	configures *config.TomlConfig
 	ctx context.Context
 
-	log = logging.GetLogger()
+	log *logrus.Logger
 )
 
 func init() {
@@ -42,6 +43,8 @@ func main () {
 
 	configures = config.Conf
 
+	log = logging.GetLogger(&configures.Log)
+
 	if *version {
 		log.Info(configures.App.Version)
 		os.Exit(0)
@@ -49,7 +52,7 @@ func main () {
 
 	// getting service start configure
 	cmdLine := flag.NewFlagSet("sync-data", flag.PanicOnError)
-	cmdLine.StringVar(&port, "p", "8088", "端口号，默认为8088")
+	cmdLine.StringVar(&port, "p", "8090", "端口号，默认为800")
 	cmdLine.StringVar(&host, "h", "127.0.0.1", "主机名，默认127.0.0.1")
 	err = cmdLine.Parse(os.Args[1:])
 	if err != nil {
@@ -64,19 +67,20 @@ func main () {
 
 	router := gin.Default()
 
-	user := router.Group("user")
+	p := ginprometheus.NewPrometheus("gin")
+	p.Use(router)
+
+	user := router.Group("api/user")
 	{
-		user.GET("/users", apis.UserList)
-		user.GET("/user", apis.User)
+		user.GET("/list", apis.UserList)
+		user.GET("/", apis.User)
 	}
 
-	plat := router.Group("plat")
+	plat := router.Group("api/plat")
 	{
 		plat.POST("/register", apis.Register)
 		plat.POST("/token", apis.GetToken)
 	}
-
-	router.GET("/metrics", promhttp.Handler())
 
 	addr := host + ":" + port
 	err = router.Run(addr)
@@ -84,20 +88,5 @@ func main () {
 		log.Errorf("ERROR: ", err)
 		panic(err)
 	}
-
-	// api route register
-	//http.HandleFunc("/token", apis.GetToken)
-	//http.HandleFunc("/register", apis.Register)
-	//http.HandleFunc("/", apis.UserList)
-	//http.HandleFunc("/user", apis.User)
-	//http.Handle("/metrics", promhttp.Handler())
-	//
-	//// service start
-	//addr := host + ":" + port
-	//log.Printf(addr)
-	//err = http.ListenAndServe(addr,nil)
-	//if err != nil {
-	//	log.Errorf("ERROR: ", err)
-	//}
 
 }

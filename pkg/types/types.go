@@ -12,7 +12,7 @@ type OAToken struct {
 
 type OAAuth struct {
 	ExpiredIn int64  `json:"expired_in(s)"`
-	Token     OaToken `json:"tokens"`
+	Token     OaToken `json:"token"`
 }
 
 

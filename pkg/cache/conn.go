@@ -2,22 +2,25 @@ package cache
 
 import (
 	"context"
+	"github.com/sirupsen/logrus"
+	"github.com/sunnywalden/sync-data/pkg/logging"
 
 	"github.com/go-redis/redis/v8"
 
 	"github.com/sunnywalden/sync-data/config"
 	"github.com/sunnywalden/sync-data/pkg/errors"
-	"github.com/sunnywalden/sync-data/pkg/logging"
 )
 
 var (
-	log = logging.GetLogger()
+	log *logrus.Logger
 )
 
 // GetClient, init redis client
-func GetClient(ctx context.Context,configures *config.RedisConf) ( *redis.Client, error) {
+func GetClient(ctx context.Context,configures *config.TomlConfig) ( *redis.Client, error) {
 
-	redisConf := configures
+	log = logging.GetLogger(&configures.Log)
+
+	redisConf := configures.Redis
 	redisHost := redisConf.Host + ":" + redisConf.Port
 	redisDB   := redisConf.DB
 	redisPassword := redisConf.Password
@@ -45,6 +48,7 @@ func GetClient(ctx context.Context,configures *config.RedisConf) ( *redis.Client
 	return client, nil
 }
 
+// Close, mysql client closing
 func Close(client * redis.Client) error {
 	err := client.Close()
 	return err

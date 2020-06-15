@@ -12,7 +12,6 @@ import (
 	"github.com/sunnywalden/sync-data/pkg/types"
 )
 
-//func Register(w http.ResponseWriter, r *http.Request) {
 func Register(c *gin.Context) {
 	var user models.PlatUser
 	res := types.Response{
@@ -27,8 +26,6 @@ func Register(c *gin.Context) {
 	user.UserName = platUser
 	user.AuthKey = authKey
 
-	//err := json.NewDecoder(r.Body).Decode(&user)
-	//if err != nil || user.UserName == "" || user.AuthKey == "" {
 	if user.UserName == "" || user.AuthKey == "" {
 		res.Code = http.StatusBadRequest
 		res.Msg = "bad params"
@@ -36,24 +33,13 @@ func Register(c *gin.Context) {
 			status,
 			res,
 		)
-		//helper.ResponseWithJson(
-		//	w,
-		//	http.StatusBadRequest,
-		//	res,
-		//)
-		//return
 	}
 
 	configures := config.Conf
 
-	db,err := databases.Conn(&configures.Mysql)
+	db,err := databases.Conn(configures)
 	if err != nil {
 		res.Msg = "database connect err"
-		//helper.ResponseWithJson(
-		//	w,
-		//	http.StatusInternalServerError,
-		//	res,
-		//)
 		c.JSON(
 			status,
 			res,
@@ -67,21 +53,11 @@ func Register(c *gin.Context) {
 			status,
 			res,
 		)
-		//helper.ResponseWithJson(
-		//	w,
-		//	http.StatusInternalServerError,
-		//	res,
-		//)
 	}
 
 	rows, err := db.Model(&models.PlatUser{}).Create(user).Rows()
 	if err != nil {
 		res.Msg = "update database platform user err"
-		//helper.ResponseWithJson(
-		//	w,
-		//	http.StatusInternalServerError,
-		//	res,
-		//)
 		c.JSON(
 			status,
 			res,
@@ -91,11 +67,6 @@ func Register(c *gin.Context) {
 	res.Msg = ""
 	res.Code = http.StatusOK
 	res.Data = rows
-	//helper.ResponseWithJson(
-	//	w,
-	//	http.StatusOK,
-	//	res,
-	//)
 	c.JSON(
 		status,
 		res,

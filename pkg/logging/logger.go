@@ -8,10 +8,10 @@ import (
 )
 
 
-func GetLogger() (logger *logrus.Logger) {
+// GetLogger, init a logger
+func GetLogger(configures *config.LogConf) (logger *logrus.Logger) {
 
-	configures := config.Conf
-	logLevel := configures.Log.Level
+	logLevel := configures.Level
 
 	logger = logrus.New()
 	logger.Formatter = &logrus.JSONFormatter{}

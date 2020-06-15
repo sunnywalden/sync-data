@@ -11,7 +11,7 @@ import (
 var db *gorm.DB
 
 // Init, init mysql oa database connection and create user table if not exists
-func Init(configures *config.MysqlConf) () {
+func Init(configures *config.TomlConfig) () {
 	var err error
 
 
@@ -27,7 +27,7 @@ func Init(configures *config.MysqlConf) () {
 }
 
 // UpdateMysql, update user table
-func UpdateMysql(update map[string]byte,where map[string]byte, configures *config.MysqlConf) (database *gorm.DB, err error) {
+func UpdateMysql(update map[string]byte,where map[string]byte, configures *config.TomlConfig) (database *gorm.DB, err error) {
 
 	Init(configures)
 

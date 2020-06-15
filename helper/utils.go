@@ -8,7 +8,7 @@ import (
 )
 
 
-
+// ResponseWithJson, encode response data
 func ResponseWithJson(w http.ResponseWriter, code int, payload types.Response) {
 
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary

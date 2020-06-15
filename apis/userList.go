@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 
 	"github.com/sunnywalden/sync-data/config"
 	"github.com/sunnywalden/sync-data/pkg/logging"
@@ -12,16 +13,11 @@ import (
 )
 
 var (
-	log = logging.GetLogger()
+	log *logrus.Logger
 )
 
 // UserList, query all users
-//func UserList(w http.ResponseWriter, r *http.Request) {
 func UserList(c *gin.Context) {
-
-	//ctx, cancel := context.WithCancel(context.Background())
-
-	//defer cancel()
 
 	res := types.Response{
 		Code: 0,
@@ -32,10 +28,10 @@ func UserList(c *gin.Context) {
 
 	configures := config.Conf
 
+	log = logging.GetLogger(&configures.Log)
+
 	users, err := sync.GetUser(c, configures)
-	//users, err := sync.GetUser(ctx, configures)
 	if err != nil {
-		//log.Error("Getting all users err!%s", err)
 		status = http.StatusInternalServerError
 		res.Msg = err.Error()
 		res.Code = -1
@@ -43,7 +39,6 @@ func UserList(c *gin.Context) {
 		res.Data = users
 	}
 
-	//helper.ResponseWithJson(w, status, res)
 	c.JSON(
 		status,
 		res,

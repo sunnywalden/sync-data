@@ -2,21 +2,23 @@ package databases
 
 import (
 	"fmt"
-
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/sirupsen/logrus"
 
 	"github.com/sunnywalden/sync-data/config"
 	"github.com/sunnywalden/sync-data/pkg/logging"
 )
 
 var (
-	log = logging.GetLogger()
+	log *logrus.Logger
 )
 
-func Conn(configures *config.MysqlConf) (db *gorm.DB,err error) {
+// Conn, get connection to database configured with given user info
+func Conn(configures *config.TomlConfig) (db *gorm.DB,err error) {
 
-	mysqlConf := configures
+	mysqlConf := configures.Mysql
+	log = logging.GetLogger(&configures.Log)
 	mysqlHost := mysqlConf.Host + ":" + mysqlConf.Port
 	mysqlDB := mysqlConf.DB
 	mysqlUser := mysqlConf.User
