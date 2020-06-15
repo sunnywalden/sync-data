@@ -3,16 +3,19 @@ package main
 import (
 	"context"
 	"flag"
+	"github.com/prometheus/common/log"
+	"github.com/sunnywalden/sync-data/pkg/auth"
+	"github.com/sunnywalden/sync-data/pkg/logging"
 	_ "net/http/pprof"
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	ginprometheus "github.com/zsais/go-gin-prometheus"
 
 	"github.com/sunnywalden/sync-data/apis"
 	"github.com/sunnywalden/sync-data/config"
-	"github.com/sunnywalden/sync-data/pkg/logging"
+	//"github.com/sunnywalden/sync-data/pkg/auth"
+	//"github.com/sunnywalden/sync-data/pkg/logging"
 )
 
 
@@ -26,7 +29,7 @@ var (
 	configures *config.TomlConfig
 	ctx context.Context
 
-	log *logrus.Logger
+	//log *logrus.Logger
 )
 
 func init() {
@@ -43,7 +46,7 @@ func main () {
 
 	configures = config.Conf
 
-	log = logging.GetLogger(&configures.Log)
+	//log := config.Logger
 
 	if *version {
 		log.Info(configures.App.Version)
@@ -65,13 +68,19 @@ func main () {
 		flag.PrintDefaults()
 	}
 
-	router := gin.Default()
+	router := gin.New()
 
 	p := ginprometheus.NewPrometheus("gin")
 	p.Use(router)
 
+	logLevel := configures.Log.Level
+	router.Use(logging.Logger(logLevel))
+
+	router.Use(gin.Recovery())
+
 	user := router.Group("api/user")
 	{
+		user.Use(auth.TokenMiddleware())
 		user.GET("/list", apis.UserList)
 		user.GET("/", apis.User)
 	}

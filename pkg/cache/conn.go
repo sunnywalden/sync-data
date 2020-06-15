@@ -2,23 +2,25 @@ package cache
 
 import (
 	"context"
+	"github.com/go-redis/redis/v8"
 	"github.com/sirupsen/logrus"
 	"github.com/sunnywalden/sync-data/pkg/logging"
 
-	"github.com/go-redis/redis/v8"
-
 	"github.com/sunnywalden/sync-data/config"
-	"github.com/sunnywalden/sync-data/pkg/errors"
+	"github.com/sunnywalden/sync-data/pkg/errs"
 )
 
 var (
 	log *logrus.Logger
+	//log = logging.GetLogger()
+	//log = config.Logger
+	//log = logging.GetLogger(config.Conf.Log.Level)
 )
 
 // GetClient, init redis client
 func GetClient(ctx context.Context,configures *config.TomlConfig) ( *redis.Client, error) {
 
-	log = logging.GetLogger(&configures.Log)
+	log = logging.GetLogger(configures.Log.Level)
 
 	redisConf := configures.Redis
 	redisHost := redisConf.Host + ":" + redisConf.Port
@@ -34,7 +36,7 @@ func GetClient(ctx context.Context,configures *config.TomlConfig) ( *redis.Clien
 	}
 
 	if options.Addr == "" {
-		return nil, errors.ErrRedisConfigNil
+		return nil, errs.ErrRedisConfigNil
 	}
 
 	client := redis.NewClient(options)

@@ -1,4 +1,4 @@
-package errors
+package errs
 
 import "errors"
 
@@ -7,4 +7,5 @@ var (
 	ErrUserNotExists = errors.New("no user matched exists")
 	ErrQueryParamsNil = errors.New("query params are all nil")
 	ErrNotAuthorized = errors.New("not authorized")
+	ErrTokenNotExists = errors.New("token could not be nil")
 )

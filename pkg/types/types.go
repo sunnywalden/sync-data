@@ -1,6 +1,9 @@
 package types
 
-import "github.com/sunnywalden/sync-data/pkg/models"
+import (
+	"github.com/dgrijalva/jwt-go"
+	"github.com/sunnywalden/sync-data/pkg/models"
+)
 
 type OaToken string
 
@@ -15,6 +18,11 @@ type OAAuth struct {
 	Token     OaToken `json:"token"`
 }
 
+
+type JWTClaims struct {
+	jwt.StandardClaims
+	User models.PlatUser
+}
 
 type UserInfo struct {
 	Code    int     `json:"code"`

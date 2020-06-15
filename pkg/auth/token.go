@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/sirupsen/logrus"
 	"github.com/sunnywalden/sync-data/pkg/logging"
+
+	//"github.com/sunnywalden/sync-data/pkg/logging"
 	"io/ioutil"
 	"net/http"
 
@@ -17,6 +19,9 @@ import (
 
 var (
 	log *logrus.Logger
+	//log = logging.GetLogger()
+	//log = config.Logger
+	//log = logging.GetLogger(config.Conf.Log.Level)
 )
 
 // jsonDecode, json decode
@@ -54,7 +59,7 @@ func bodyResolve(resp *http.Response) (types.OAToken, error) {
 // get token from oa api
 func GetToken() (token types.OaToken, err error) {
 	configures := config.Conf
-	log = logging.GetLogger(&configures.Log)
+	log = logging.GetLogger(configures.Log.Level)
 	oaConf := configures.OA
 	oaUrl := oaConf.OaUrl
 	oaTokenApi := oaConf.TokenApi

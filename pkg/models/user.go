@@ -2,7 +2,7 @@ package models
 
 // User, oa user
 type User struct {
-	Id int `json:"departmentName",gorm:"primary_key;id:int;not null;index:user_idx"`
+	Id int `json:"id",gorm:"primary_key;id:int;not null;index:user_idx"`
 	Department string `json:"departmentName",gorm:"depart:varchar(256);not null;"`
 	Title string `json:"jobTitle",gorm:"title:varchar(256);null;"`
 	Name string `json:"lastName",gorm:"name:varchar(256);not null;"`

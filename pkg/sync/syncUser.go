@@ -65,7 +65,7 @@ func bodyResolve(resp *http.Response) (types.UserInfo, error) {
 // GetUser, query all active users of oa
 func GetUser(ctx context.Context, configures *config.TomlConfig) (users []models.User,err error) {
 
-	log = logging.GetLogger(&configures.Log)
+	log = logging.GetLogger(configures.Log.Level)
 
 	// 优先查询缓存
 	users, err = getUsersFromCache(ctx, configures)
@@ -208,7 +208,7 @@ func storeUsersToDB(configures *config.TomlConfig, users []models.User) (err err
 
 	for id, userInfo := range users {
 		userInfo.Id = id
-		userDb = db.Create(userInfo)
+		userDb = db.Update(userInfo)
 	}
 
 	if userDb != nil {

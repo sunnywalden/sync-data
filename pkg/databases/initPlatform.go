@@ -1,4 +1,4 @@
-package controllers
+package databases
 
 import (
 	"github.com/jinzhu/gorm"
@@ -7,7 +7,7 @@ import (
 )
 
 func InitPlatUserTable(db *gorm.DB) (err error) {
-	if !db.HasTable(&models.User{}) {
+	if !db.HasTable(&models.PlatUser{}) {
 		if err := db.Set("gorm:table_options", "ENGINE=InnoDB DEFAULT CHARSET=utf8").CreateTable(&models.PlatUser{}).Error; err != nil {
 			log.Errorf("Create platform user table error!%s", err)
 			return err

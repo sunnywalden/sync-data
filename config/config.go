@@ -12,6 +12,7 @@ var (
 	confPath string
 	// Conf global
 	Conf *TomlConfig
+	//LogLevel logrus.Level
 )
 
 type TomlConfig struct {
@@ -70,5 +71,7 @@ func Init() (*TomlConfig, error) {
 		log.Fatalf("getting configure from .toml failed!%s\n", err)
 		return nil, err
 	}
+	//Logger = logging.GetLogger(Conf.Log.Level)
+
 	return Conf, nil
 }

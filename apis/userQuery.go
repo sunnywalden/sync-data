@@ -2,20 +2,21 @@ package apis
 
 import (
 	"context"
+	"github.com/sirupsen/logrus"
+	"github.com/sunnywalden/sync-data/pkg/logging"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 
 	"github.com/sunnywalden/sync-data/config"
-	"github.com/sunnywalden/sync-data/pkg/errors"
+	"github.com/sunnywalden/sync-data/pkg/errs"
 	"github.com/sunnywalden/sync-data/pkg/models"
 	"github.com/sunnywalden/sync-data/pkg/sync"
 	"github.com/sunnywalden/sync-data/pkg/types"
 )
 
-
 // searchUser, query user using params
-func searchUser(ctx context.Context, attr string, searchStr string) (user *models.User, err error) {
+func searchUser(ctx context.Context, log *logrus.Logger,attr string, searchStr string) (user *models.User, err error) {
 	users, err := sync.GetUser(ctx, config.Conf)
 	if err != nil {
 		return nil, err
@@ -43,13 +44,19 @@ func searchUser(ctx context.Context, attr string, searchStr string) (user *model
 
 	}
 
-	return nil, errors.ErrUserNotExists
+	return nil, errs.ErrUserNotExists
 
 }
 
 
 // User, query user matched
 func User(c *gin.Context) {
+
+	var log *logrus.Logger
+
+	configures := config.Conf
+
+	log = logging.GetLogger(configures.Log.Level)
 
 	var (
 		user *models.User
@@ -70,7 +77,7 @@ func User(c *gin.Context) {
 	if nickName == "" && userId == "" && name == "" {
 		status = http.StatusBadRequest
 		res.Code = -1
-		res.Msg = errors.ErrQueryParamsNil.Error()
+		res.Msg = errs.ErrQueryParamsNil.Error()
 		c.JSON(
 			status,
 			res,
@@ -78,11 +85,11 @@ func User(c *gin.Context) {
 	}
 
 	if nickName != "" {
-		user, err = searchUser(c, "nickName", nickName)
+		user, err = searchUser(c, log,"nickName", nickName)
 	} else if userId != "" {
-		user, err = searchUser(c, "loginId", userId)
+		user, err = searchUser(c, log,"loginId", userId)
 	} else {
-		user, err = searchUser(c, "lastName", name)
+		user, err = searchUser(c, log,"lastName", name)
 	}
 
 	// 判断查询用户是否异常
@@ -92,6 +99,7 @@ func User(c *gin.Context) {
 		res.Msg = err.Error()
 	} else {
 		res.Data = user
+		log.Infof("User query finished!")
 	}
 
 	c.JSON(
