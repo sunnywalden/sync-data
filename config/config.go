@@ -68,7 +68,7 @@ func init() {
 func Init() (*TomlConfig, error) {
 	_, err := toml.DecodeFile(confPath, &Conf)
 	if err != nil {
-		log.Fatalf("getting configure from .toml failed!%s\n", err)
+		log.Fatalf("getting configure from .toml failed!%s", err)
 		return nil, err
 	}
 	//Logger = logging.GetLogger(Conf.Log.Level)

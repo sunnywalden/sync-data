@@ -21,7 +21,7 @@ func Conn(configures *config.TomlConfig) (db *gorm.DB,err error) {
 	mysqlPassword := mysqlConf.Password
 
 	dbUrl := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local", mysqlUser, mysqlPassword, mysqlHost, mysqlDB)
-	log.Printf("Debug mysql connect string:%s\n", dbUrl)
+	log.Printf("Debug mysql connect string:%s", dbUrl)
 
 	db, err = gorm.Open("mysql", dbUrl)
 	if err != nil {

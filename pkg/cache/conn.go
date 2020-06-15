@@ -27,7 +27,7 @@ func GetClient(ctx context.Context,configures *config.TomlConfig) ( *redis.Clien
 	redisDB   := redisConf.DB
 	redisPassword := redisConf.Password
 
-	log.Debugf("Debug redis addr:%s\n", redisHost)
+	log.Debugf("Debug redis addr:%s", redisHost)
 
 	options := &redis.Options{
 		Addr:     redisHost,
@@ -44,7 +44,7 @@ func GetClient(ctx context.Context,configures *config.TomlConfig) ( *redis.Clien
 	if err != nil {
 		return nil, err
 	} else {
-		log.Infof("redis ping response:%s\n", pong)
+		log.Infof("redis ping response:%s", pong)
 	}
 
 	return client, nil

@@ -29,7 +29,6 @@ var (
 	configures *config.TomlConfig
 	ctx context.Context
 
-	//log *logrus.Logger
 )
 
 func init() {
@@ -45,8 +44,6 @@ func main () {
 	}
 
 	configures = config.Conf
-
-	//log := config.Logger
 
 	if *version {
 		log.Info(configures.App.Version)

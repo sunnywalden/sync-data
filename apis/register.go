@@ -1,14 +1,14 @@
 package apis
 
 import (
-	"github.com/sirupsen/logrus"
-	"github.com/sunnywalden/sync-data/config"
-	"github.com/sunnywalden/sync-data/pkg/logging"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 
+	"github.com/sunnywalden/sync-data/config"
 	"github.com/sunnywalden/sync-data/pkg/databases"
+	"github.com/sunnywalden/sync-data/pkg/logging"
 	"github.com/sunnywalden/sync-data/pkg/models"
 	"github.com/sunnywalden/sync-data/pkg/types"
 )

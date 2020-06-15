@@ -38,7 +38,7 @@ func jsonDecode(bodyC []byte) (types.UserInfo, error) {
 	log.Debugf("debug data before decode:%s", bodyC)
 	err := json.Unmarshal(bodyC, &jsonMap)
 	if err != nil {
-		log.Errorf("json decode err!%s\n", err.Error())
+		log.Errorf("json decode err!%s", err.Error())
 	} else {
 		return jsonMap, nil
 	}
@@ -162,7 +162,7 @@ func getUsersFromCache(ctx context.Context, configures *config.TomlConfig) (user
 		return nil, err
 	}
 
-	//logging.Printf("Debug users before decode:%s\n", val)
+	log.Debugf("Debug users before decode:%s", val)
 
 	json := jsoniter.ConfigCompatibleWithStandardLibrary
 	err = json.Unmarshal([]byte(val), &users)
@@ -241,12 +241,12 @@ func setUsersCache(ctx context.Context, users []models.User, configures *config.
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	usersByte, err := json.Marshal(users)
 	if err != nil {
-		log.Errorf("Json encode users error!%s\n", err)
+		log.Errorf("Json encode users error!%s", err)
 	}
 
 	err = client.Set(ctx, userKey, usersByte, time.Hour * 24 * Days).Err()
 	if err != nil {
-		log.Errorf("Store users to cache error!%s\n", err)
+		log.Errorf("Store users to cache error!%s", err)
 		return  err
 	}
 	return nil

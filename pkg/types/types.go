@@ -2,6 +2,7 @@ package types
 
 import (
 	"github.com/dgrijalva/jwt-go"
+
 	"github.com/sunnywalden/sync-data/pkg/models"
 )
 

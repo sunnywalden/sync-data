@@ -31,7 +31,7 @@ func jsonDecode(bodyC []byte) (types.OAToken, error) {
 
 	err := json.Unmarshal(bodyC, &jsonMap)
 	if err != nil {
-		log.Fatalf("json decode err!%s\n", err.Error())
+		log.Fatalf("json decode err!%s", err.Error())
 		return types.OAToken{}, err
 	} else {
 		return jsonMap, nil
@@ -44,10 +44,10 @@ func bodyResolve(resp *http.Response) (types.OAToken, error) {
 	if status == 200 {
 		defer resp.Body.Close()
 		bodyC, _ := ioutil.ReadAll(resp.Body)
-		log.Printf("Debug api response:%s\n", string(bodyC))
+		log.Printf("Debug api response:%s", string(bodyC))
 		jsonMap, err := jsonDecode(bodyC)
 		if err != nil {
-			log.Fatalf("Read api response error!%s\n", err)
+			log.Fatalf("Read api response error!%s", err)
 			return types.OAToken{}, err
 		}
 		return jsonMap, nil
@@ -86,7 +86,7 @@ func GetToken() (token types.OaToken, err error) {
 			return "", errors.New(res.Message)
 		}
 		//data := res.Data
-		//logging.Printf("Debug oa tokens api return:%d, %s\n", code, data.Token)
+		//logging.Printf("Debug oa tokens api return:%d, %s", code, data.Token)
 		token = res.Data.Token
 		log.Debugf("Debug oa token:%s", token)
 		return token, nil
