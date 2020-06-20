@@ -33,6 +33,7 @@ func GenerateToken(user *models.PlatUser) (string, error) {
 	return token.SignedString([]byte(authKey))
 }
 
+// VerifyToken, platform user token verify
 func VerifyToken(c *gin.Context) (claims *types.JWTClaims, err error) {
 	tokenStr := c.Request.Header.Get("X-Authorization-Token")
 	if tokenStr == "" {
@@ -63,7 +64,7 @@ func VerifyToken(c *gin.Context) (claims *types.JWTClaims, err error) {
 	}
 }
 
-// 更新token
+// RefreshToken, 更新token
 func RefreshToken(c *gin.Context) (string, error) {
 	claims, err := VerifyToken(c)
 	if err != nil {

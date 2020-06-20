@@ -3,25 +3,20 @@ package auth
 import (
 	"errors"
 	"fmt"
-	"github.com/sirupsen/logrus"
-	"github.com/sunnywalden/sync-data/pkg/logging"
-
-	//"github.com/sunnywalden/sync-data/pkg/logging"
 	"io/ioutil"
 	"net/http"
 
 	jsoniter "github.com/json-iterator/go"
+	"github.com/sirupsen/logrus"
 
 	"github.com/sunnywalden/sync-data/config"
 	"github.com/sunnywalden/sync-data/pkg/consts"
+	"github.com/sunnywalden/sync-data/pkg/logging"
 	"github.com/sunnywalden/sync-data/pkg/types"
 )
 
 var (
 	log *logrus.Logger
-	//log = logging.GetLogger()
-	//log = config.Logger
-	//log = logging.GetLogger(config.Conf.Log.Level)
 )
 
 // jsonDecode, json decode
@@ -56,7 +51,7 @@ func bodyResolve(resp *http.Response) (types.OAToken, error) {
 	return types.OAToken{}, errors.New(resp.Status)
 }
 
-// get token from oa api
+// GetToken, get token from oa api
 func GetToken() (token types.OaToken, err error) {
 	configures := config.Conf
 	log = logging.GetLogger(configures.Log.Level)
@@ -85,7 +80,6 @@ func GetToken() (token types.OaToken, err error) {
 			log.Fatalf("Getting token error!%s", res.Message)
 			return "", errors.New(res.Message)
 		}
-		//data := res.Data
 		//logging.Printf("Debug oa tokens api return:%d, %s", code, data.Token)
 		token = res.Data.Token
 		log.Debugf("Debug oa token:%s", token)

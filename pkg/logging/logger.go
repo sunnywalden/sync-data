@@ -20,6 +20,7 @@ func GetLogger(logLevel logrus.Level) (logger *logrus.Logger) {
 	return logger
 }
 
+// Logger, logger for router
 func Logger(logLevel logrus.Level) gin.HandlerFunc {
 		// use logrus
 		logger := logrus.New()

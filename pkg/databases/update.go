@@ -49,6 +49,7 @@ func UpdateMysql(update map[string]byte,where map[string]byte, configures *confi
 }
 
 
+// UpdatePlat, platform user create
 func UpdatePlat(user *models.PlatUser) (rows  *sql.Rows,err error) {
 	configures := config.Conf
 	db,err := Conn(configures)

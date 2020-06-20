@@ -12,9 +12,6 @@ import (
 
 var (
 	log *logrus.Logger
-	//log = logging.GetLogger()
-	//log = config.Logger
-	//log = logging.GetLogger(config.Conf.Log.Level)
 )
 
 // GetClient, init redis client

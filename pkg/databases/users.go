@@ -12,7 +12,6 @@ import (
 
 var (
 	log *logrus.Logger
-	//log = logging.GetLogger()
 )
 
 

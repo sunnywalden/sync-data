@@ -2,12 +2,12 @@ package databases
 
 import (
 	"fmt"
-	"github.com/sunnywalden/sync-data/pkg/logging"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 
 	"github.com/sunnywalden/sync-data/config"
+	"github.com/sunnywalden/sync-data/pkg/logging"
 )
 
 // Conn, get connection to database configured with given user info

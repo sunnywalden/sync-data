@@ -2,10 +2,10 @@ package config
 
 import (
 	"flag"
-	"github.com/sirupsen/logrus"
 	"log"
 
 	"github.com/BurntSushi/toml"
+	"github.com/sirupsen/logrus"
 )
 
 var (

@@ -3,19 +3,17 @@ package main
 import (
 	"context"
 	"flag"
-	"github.com/prometheus/common/log"
-	"github.com/sunnywalden/sync-data/pkg/auth"
-	"github.com/sunnywalden/sync-data/pkg/logging"
 	_ "net/http/pprof"
 	"os"
 
 	"github.com/gin-gonic/gin"
 	ginprometheus "github.com/zsais/go-gin-prometheus"
 
+	"github.com/prometheus/common/log"
 	"github.com/sunnywalden/sync-data/apis"
 	"github.com/sunnywalden/sync-data/config"
-	//"github.com/sunnywalden/sync-data/pkg/auth"
-	//"github.com/sunnywalden/sync-data/pkg/logging"
+	"github.com/sunnywalden/sync-data/pkg/auth"
+	"github.com/sunnywalden/sync-data/pkg/logging"
 )
 
 
